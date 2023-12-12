@@ -1,9 +1,7 @@
 package game2048;
 
 import java.util.Formatter;
-import java.util.HashSet;
 import java.util.Observable;
-import java.util.Set;
 
 
 /** The state of a game of 2048.
@@ -109,92 +107,64 @@ public class Model extends Observable {
      *    and the trailing tile does not.
      * */
     public boolean tilt(Side side) {
+        board.setViewingPerspective(side);
         boolean changed;
         changed = false;
 
-        Set<Tile> changedTiles = new HashSet<>();
-        board.setViewingPerspective(side);
-        for (int row = board.size() - 2; row >= 0; row--) {
-            for (int col = 0; col < board.size(); col++) {
-                Tile tile = board.tile(col, row);
-                if (tile == null) {
-                    continue;
-                }
-                VTile vTile = new VTile(new Coordinate(col, row), tile);
-                boolean isChangedAfterMove = moveTileUp(vTile, changedTiles);
-                if (isChangedAfterMove) {
-                    changed = true;
-                }
-            }
-        }
-        board.setViewingPerspective(Side.NORTH);
-
+        // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+        int size = board.size();
+        for (int col = 0; col < size; col++) {
+            boolean[] hasChanged = new boolean[size];
+            for (int row = size - 1; row >= 0; row--) {
+                Tile t = board.tile(col, row);
+                changed = moveTileUp(t, hasChanged) || changed;
+            }
+        }
 
+        board.setViewingPerspective(Side.NORTH);
         checkGameOver();
         if (changed) {
             setChanged();
         }
         return changed;
     }
-
-    private boolean moveTileUp(VTile vTile, Set<Tile> changedTiles) {
+    /**
+    return iff the col changes after the tilting
+     */
+    private boolean moveTileUp(Tile t, boolean[] hasChanged) {
+        if (t == null) {
+            return false;
+        }
+        int size = board.size();
+        Tile nearestTile = findTheNearestTile(t);
         int targetRow;
-        VTile nearest = findNearestTileAbove(vTile);
-        if (nearest == null) {
-            targetRow = board.size() - 1;
-        } else if (vTile.actualTile.value() == nearest.actualTile.value() && !changedTiles.contains(nearest.actualTile)) {
-            targetRow = nearest.row;
-        } else if (nearest.row == vTile.row + 1) {
+        if (nearestTile == null) {
+            targetRow = size - 1;
+        } else if (t.value() == nearestTile.value() && !hasChanged[nearestTile.row()]) {
+            targetRow = nearestTile.row();
+        } else if (nearestTile.row() == t.row() + 1) {
             return false;
         } else {
-            targetRow = nearest.row - 1;
+            targetRow = nearestTile.row() - 1;
         }
-        boolean isMerged = board.move(vTile.col, targetRow, vTile.actualTile);
-        if (isMerged) {
-            score += vTile.actualTile.next().value();
-            changedTiles.add(board.tile(vTile.col, targetRow));
+        boolean shouldMerge = board.move(t.col(), targetRow, t);
+        if (shouldMerge) {
+            score += t.next().value();
+            hasChanged[targetRow] = true;
         }
         return true;
     }
 
-    private VTile findNearestTileAbove(VTile vTile) {
-        for (int row = vTile.row + 1; row < board.size(); row++) {
-            Tile actualTile = board.tile(vTile.col, row);
-            if (actualTile != null) {
-                return new VTile(new Coordinate(vTile.col, row), actualTile);
+    private Tile findTheNearestTile(Tile t) {
+        int size = board.size();
+        for (int i = t.row() + 1; i < size; i++) {
+            if (board.tile(t.col(), i) != null) {
+                return board.tile(t.col(), i);
             }
         }
         return null;
-    }
-
-    private static class VTile {
-        int col;
-        int row;
-        Tile actualTile;
-        public VTile(Coordinate c, Tile t) {
-            col = c.col;
-            row = c.row;
-            actualTile = t;
-        }
-    }
-
-    private static class Coordinate {
-        int col;
-        int row;
-        public Coordinate(int c, int r) {
-            col = c;
-            row = r;
-        }
-        public static Coordinate[] of(int[][] values) {
-            Coordinate[] coordinates = new Coordinate[values.length];
-            for (int i = 0; i < values.length; i++) {
-                int[] coordinate = values[i];
-                coordinates[i] = new Coordinate(coordinate[0], coordinate[1]);
-            }
-            return coordinates;
-        }
     }
 
 
