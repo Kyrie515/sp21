@@ -100,4 +100,25 @@ public class ArrayDequeTest {
             System.out.println(it.next());
         }
     }
+
+    @Test
+    public void randomTest() {
+        ArrayDeque<Integer> ArrayDeque = new ArrayDeque<>();
+        ArrayDeque.addFirst(0);
+        ArrayDeque.addFirst(1);
+        ArrayDeque.get(1)     ;
+        ArrayDeque.removeLast() ;
+        ArrayDeque.addLast(4);
+        ArrayDeque.addLast(5);
+        ArrayDeque.removeFirst() ;
+        ArrayDeque.addFirst(7);
+        ArrayDeque.addLast(8);
+        ArrayDeque.get(0)     ;
+        ArrayDeque.removeLast()  ;
+        ArrayDeque.addLast(11);
+        ArrayDeque.removeLast() ;
+        int i = ArrayDeque.removeLast();
+        assertEquals(i, 5);
+
+    }
 }

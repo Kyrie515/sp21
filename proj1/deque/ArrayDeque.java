@@ -95,9 +95,11 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         T rmvEle;
         if (nextLast == 0) {
             rmvEle = (T) array[array.length - 1];
+            array[array.length - 1] = null;
             nextLast = array.length - 1;
         } else {
             rmvEle = (T) array[nextLast - 1];
+            array[nextLast - 1] = null;
             nextLast--;
         }
 
@@ -117,13 +119,15 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         T rmvEle;
         if (nextFirst == array.length - 1) {
             rmvEle = (T) array[0];
+            array[0] = null;
             nextFirst = 0;
         } else {
             rmvEle = (T) array[nextFirst + 1];
+            array[nextFirst + 1] = null;
             nextFirst++;
         }
         //check if needed resize
-        if (((double) size - 1) / array.length < 0.25) {
+        if (array.length > 100 && ((double) size - 1) / array.length < 0.25) {
             resize();
         }
         size--;
@@ -171,7 +175,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     private void resize() {
-        if (size + 1 == array.length) {//grow: nextLast == nextFirst
+        if (size + 1 == array.length) { //grow: nextLast == nextFirst
             Object[] newArray = new Object[2 * array.length];
             Iterator<T> it = this.iterator();
             int i = 0;
@@ -201,7 +205,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     private class ArrayDequeIterator implements Iterator<T> {
         int wiser;
         int p;
-        public ArrayDequeIterator() {
+        ArrayDequeIterator() {
             this.wiser = 0;
             this.p = nextFirst + 1;
         }

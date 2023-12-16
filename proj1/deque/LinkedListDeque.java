@@ -89,7 +89,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
         if (index >= size) {
             return null;
         }
-        Node<T> p = this.head;
+        Node<T> p = this.head.next;
         int i = 0;
         while (i != index) {
             p = p.next;
@@ -105,7 +105,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
 
     private class LinkedListDequeIterator implements Iterator<T> {
         Node<T> p;
-        public LinkedListDequeIterator() {
+        LinkedListDequeIterator() {
             this.p = head;
         }
 
@@ -162,18 +162,18 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
         T val;
         Node<T> pre;
         Node<T> next;
-        public Node(T val) {
+        Node(T val) {
             this.val = val;
             this.next = null;
             this.pre = null;
         }
 
-        public Node(Node<T> next) {
+        Node(Node<T> next) {
             this.next = next;
             this.pre = null;
         }
 
-        public Node(T val, Node<T> next, Node<T> pre) {
+        Node(T val, Node<T> next, Node<T> pre) {
             this.val = val;
             this.next = next;
             this.pre = pre;
