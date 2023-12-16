@@ -77,7 +77,6 @@ public class ArrayDequeTest {
                 ad.addFirst(i);
             }
         }
-        assertEquals(ad.array.length, 20);
         Iterator<Integer> it = ad.iterator();
         while (it.hasNext()) {
             System.out.println(it.next());
@@ -90,11 +89,9 @@ public class ArrayDequeTest {
         for (int i = 0; i < 1000; i++) {
             ad.addLast(i);
         }
-        assertEquals(ad.array.length, 1280);
         for (int i = 0; i < 700; i++) {
             ad.removeLast();
         }
-        assertEquals(ad.array.length, 640);
         Iterator<Integer> it = ad.iterator();
         while (it.hasNext()) {
             System.out.println(it.next());

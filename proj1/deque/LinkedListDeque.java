@@ -128,7 +128,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
         return recursive(this.head.next, index);
     }
 
-    public T recursive(Node<T> p, int index) {
+    private T recursive(Node<T> p, int index) {
         if (index == 0) {
             return p.val;
         }
