@@ -126,4 +126,19 @@ public class LinkedListDequeTest {
         }
 
     }
+
+    @Test
+    public void testGet() {
+        LinkedListDeque<Integer> LinkedListDeque = new LinkedListDeque<>();
+        LinkedListDeque.addLast(0);
+        LinkedListDeque.removeFirst();
+        LinkedListDeque.addLast(2);
+        LinkedListDeque.removeLast() ;
+        LinkedListDeque.addLast(5);
+        LinkedListDeque.addLast(6);
+        LinkedListDeque.addFirst(7);
+        int res = LinkedListDeque.get(1);
+        assertEquals(res, 5);
+
+    }
 }

@@ -2,7 +2,7 @@ package deque;
 
 import java.util.Iterator;
 
-public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
+public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     private Node<T> head;
     private Node<T> tail;
 
@@ -103,17 +103,15 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         return new LinkedListDequeIterator();
     }
 
-    protected class LinkedListDequeIterator implements Iterator<T> {
-        int wiser;
+    private class LinkedListDequeIterator implements Iterator<T> {
         Node<T> p;
         public LinkedListDequeIterator() {
-            this.wiser = 0;
-            this.p = (Node<T>) head;
+            this.p = head;
         }
 
         @Override
         public boolean hasNext() {
-            return wiser < size;
+            return p.next == tail;
         }
 
         @Override
@@ -139,25 +137,25 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof LinkedListDeque)) {
+        if (o == null) {
             return false;
-        } else {
-            LinkedListDeque<T> other = (LinkedListDeque<T>) o;
-            if (other.size() != this.size) {
-                return false;
-            }
-            if (this.isEmpty() && other.isEmpty()) {
-                return true;
-            }
-            Node<T> p = this.head.next;
-            Node<T> q = (Node<T>) other.get(0);
-            while (p != null && q != null) {
-                if (p.val != q.val) {
-                    return false;
-                }
-            }
+        }
+        if (o == this) {
             return true;
         }
+        if (!(o instanceof LinkedListDeque)) {
+            return false;
+        }
+        LinkedListDeque<?> lld = (LinkedListDeque<?>) o;
+        if (lld.size() != size) {
+            return false;
+        }
+        for (int i = 0; i < size; i++) {
+            if (lld.get(i) != get(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static class Node<T> {
