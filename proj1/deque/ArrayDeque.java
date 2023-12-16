@@ -7,21 +7,12 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     private final int DEFAULT_LENGTH = 10;
     private int nextFirst = 4;
     private int nextLast = 5;
-    int size = 0;
+    private int size = 0;
     Object[] array;
     public ArrayDeque() {
         array = new Object[DEFAULT_LENGTH];
     }
 
-    public ArrayDeque(int capacity) {
-        if (capacity <= DEFAULT_LENGTH) {
-            array = new Object[DEFAULT_LENGTH];
-        } else {
-            array = new Object[capacity];
-            nextFirst = (capacity / 2) - 1;
-            nextLast = (capacity / 2);
-        }
-    }
     @Override
     public void addFirst(T t) {
         if (size + 1 == array.length) {
